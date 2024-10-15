@@ -19,8 +19,8 @@ creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", sco
 sheetsClient = gspread.authorize(creds)
 sheet = sheetsClient.open("Evil Within").sheet1
 
-CHANNEL_ID = 
-BOT_TOKEN = ""
+#CHANNEL_ID = 
+#BOT_TOKEN = ""#
 
 
 with open('DowntimeResults1.json') as x:
@@ -39,6 +39,7 @@ lore = []
 contacts = []
 blackmail = []
 Milestone = []
+Level = []
 
 
 updating = False
@@ -52,6 +53,7 @@ def updateData():
 	global contacts
 	global blackmail 
 	global Milestone
+	global Level
 	players = sheet.col_values(1)
 	del players[0]
 	characters = sheet.col_values(2)
@@ -68,6 +70,8 @@ def updateData():
 	del blackmail[0]
 	Milestone = sheet.col_values(8)
 	del Milestone[0]
+	Level = sheet.col_values(9)
+	del Level[0]
 
 
 @discordClient.event
