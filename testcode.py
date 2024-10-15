@@ -76,7 +76,7 @@ def updateData():
 
 @discordClient.event
 async def on_ready():
-	print("Bot is ready.")
+	print("It's Botting time.")
 	downtimeIncrease.start()
 
 @discordClient.event
@@ -125,10 +125,10 @@ async def initialise(ctx, *, message):
 						else:
 							await ctx.send("You cannot initialise a character with over 60 DTD.")
 					else:
-						newRow = [str(ctx.author.id), message.upper(), 30, 0, 0, 0, 0, 0, ".",]
+						newRow = [str(ctx.author.id), message.upper(), 30, 0, 0, 0, 0, 0, ".",1,]
 						await ctx.message.add_reaction('\U0001F44D')
 				except:
-					newRow = [str(ctx.author.id), message.upper(), 30, 0, 0, 0, 0, 0, ".",]
+					newRow = [str(ctx.author.id), message.upper(), 30, 0, 0, 0, 0, 0, ".",1,]
 					await ctx.message.add_reaction('\U0001F44D')
 				sheet.insert_row(newRow, 2)
 		else:
@@ -229,6 +229,48 @@ async def downtimeIncrease():
             else:
                 sheet.update_cell(x + 2, 3, int(downtime[x]) + 30)
             await asyncio.sleep(1)
+        updating = False
+
+@tasks.loop(minutes=1)
+async def CreditIncrease():
+    global credits
+    global updating
+    dt = datetime.datetime.utcnow()
+    
+    if (dt.day == 1 or dt.day == 15) and dt.hour == 5 and dt.minute == 30:
+        await updateData()  # Assuming this updates any necessary data
+        updating = True
+        
+        
+        
+        for index, player in enumerate(players):
+            current_credits = player['credits']
+            level = player['level']
+
+            
+            increase = 0
+            if level <= 2:
+                increase = 1000  
+            elif level <= 4:
+                increase = 2000
+            elif level <= 12:
+                increase = 8000  
+            elif level <= 16:
+                increase = 16000  
+            elif level <= 20:
+                increase = 32000
+            
+            new_credits = current_credits + increase
+            
+            
+            if new_credits > x:
+                new_credits = x
+            
+            
+            sheet.update_cell(index + 2, 4, new_credits)  
+            
+            await asyncio.sleep(1)  
+        
         updating = False
 
 @discordClient.command(aliases=["dep"])
